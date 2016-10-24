@@ -111,11 +111,19 @@ Led by OPI John
     - Can create a private catalog of containers we create
 - (lots of things I didn't feel like noting, mainly because lunch)
 
-## Building Briks
-(that's our new name)
+## Building "Briks"
+(that's our new name for the data-driven forms)
 12:45pm
 
 - Ravi and Chris getting started
     - Postgres
+- Ashby is going to take a good amount of GQ admin code as a starting point to lay on top of the API
+- Questions
     - question about deploy process - local? remote? Docker?
-- Ashby is going to take a good amount of GQ admin code to lay on top of the API
+    - where are we putting DB 'seed data'?
+        - conversation on using empty Docker containers and scratch layers and structural layers and data layers and I'm lost but someone else can fill this in
+        - storing snapshots on S3...
+        - moved into a conversation about some of the ways Drone improves on Jenkins, especially because it interfaces with Docker so well
+    - how do we set up local dev environs so FE and BE can both work smoothly?
+        - e.g. FED code runs local but points at Docker container for BE data
+    
