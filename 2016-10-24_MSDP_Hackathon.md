@@ -24,6 +24,8 @@ Led by OPI John
 - Adam set up a bucket on AWS with permissions and such for us to access
 
 ### Things to do
+_(Note: I'm hanging out with the Adam team for these notes)_
+
 1. VPC
     - set up a variety of components
     - public vs. private
@@ -44,7 +46,7 @@ Led by OPI John
     - adam set up a module to handle the creation of the subnets: three different ones on three different availability zones
     - any time you create a module, even if it is local, you need to run `terraform get` to import it
     
-### Best practices
+#### Best practices
 - Break your components into individual Terraform files: VPC, security groups, etc.
 - TF just compiles everything together, it doesn't care about individual files
 - Generated tfstate file from TF goes to AWS, but the dev doesn't really care about the contents
