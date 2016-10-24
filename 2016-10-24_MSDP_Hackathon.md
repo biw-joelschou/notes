@@ -23,7 +23,7 @@ Led by OPI John
         - OPI Andy
 - Adam set up a bucket on AWS with permissions and such for us to access
 
-### Process
+### Things to do
 1. VPC
     - set up a variety of components
     - public vs. private
@@ -38,8 +38,16 @@ Led by OPI John
     - used a data object to get the most recent Ubuntu to use for a new instances
     - then created an instance (tried t2.micro first, it failed due to some virtualization config, went to t1.micro)
     - assigned a resource to the appropriate subnet ID
+4. modules
+    - good place to do the networking layer
+    - can reference things that are local, on GH, other repos, generic HTTP locations, etc.
+    - adam set up a module to handle the creation of the subnets: three different ones on three different availability zones
+    - any time you create a module, even if it is local, you need to run `terraform get` to import it
     
 ### Best practices
 - Break your components into individual Terraform files: VPC, security groups, etc.
 - TF just compiles everything together, it doesn't care about individual files
 - Generated tfstate file from TF goes to AWS, but the dev doesn't really care about the contents
+- use modules to share common configs (true?)
+- make as many things variables as possible, but give defaults
+    - variables can be imported from separate files
