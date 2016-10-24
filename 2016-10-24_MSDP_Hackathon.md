@@ -1,7 +1,7 @@
 # Modern Software Development Practices Hackathon
 2016-10-24
 
-## Terraform
+## Terraform pt.1 : intro and practice
 9:30am or so
 Led by OPI John
 
@@ -53,3 +53,42 @@ _(Note: I'm hanging out with the Adam team for these notes)_
 - use modules to share common configs (true?)
 - make as many things variables as possible, but give defaults
     - variables can be imported from separate files
+
+## Terraform pt.2 : implementation for real
+10:45am
+Led by OPI John
+
+### Networking setup
+- giving a small overview of how AMZ's geography works
+    - regions > availability zones > data centers, etc.
+    - infra between regions is considered a WAN with all associated latency considerations
+    - infra within a region is considered a LAN with low-latency
+- create a VPC with public and private subnets
+    - three of each across three different buildings (one of each per zone)
+- can create network ACLs between subnets (recommends against that because subnets are stateless and then you have to open ports and defeat the purpose of the private subnet)
+    - create security groups instead
+
+### Rancher
+- (I'm totally not following this topic so no notes)
+- (Production setup will have redundancy for Rancher and DBs, but for the purposes of this hack we're not going to go through the work required to balance that ... something about UDP load-balancing limits in AMZ)
+- DBs will live inside the private subnets
+- Racher server will live in the public ones
+
+- "Rancher is a container orchestration platform"
+- Two pieces to Rancher
+    1. Server
+        - API
+        - UI
+        - Scheduling for containers
+        - State
+    2. Agent
+        - Boots and calls server ("I'm joining this environment")
+        - multiple machines in the cluster (called an "environment") will all call Rancher server to get themselves set up
+            - each machine will create a networking agent for talking to each other on specific UDP ports (500, 4500) using a VPN tunnel
+        - each container on a machine will talk to other containers on other machines within that cluster using this ^ local networking agent
+- (plenty of talk and questions about why to use Rancher and what we get with it vs. bare Kubernetes w/o Rancher)
+    - Rancher's goal is to build a clean platform that's more "click and go" and do the management on top of the tools
+    - Rancher doesn't mask any access to the containers themselves, so we don't lose any access for troubleshooting and whatnot
+    - Amazon Load Balancer sits in front of all the containers in an environment to distribute requests
+        - can be a layer of "proxy" machines bewteen the load balancer and the environment containers (didn't catch why)
+    - Racher's metadata API is something John is touting as extremely powerful
