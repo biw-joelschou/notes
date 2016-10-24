@@ -69,7 +69,7 @@ Led by OPI John
     - create security groups instead
 
 ### Rancher
-- (I'm totally not following this topic so no notes)
+- (I'm totally not following this topic so bad notes)
 - (Production setup will have redundancy for Rancher and DBs, but for the purposes of this hack we're not going to go through the work required to balance that ... something about UDP load-balancing limits in AMZ)
 - DBs will live inside the private subnets
 - Racher server will live in the public ones
@@ -92,3 +92,30 @@ Led by OPI John
     - Amazon Load Balancer sits in front of all the containers in an environment to distribute requests
         - can be a layer of "proxy" machines bewteen the load balancer and the environment containers (didn't catch why)
     - Racher's metadata API is something John is touting as extremely powerful
+
+### Diving into Rancher
+11:40am or so
+
+#### Our setup
+(Andy put this together)
+
+- hosts, stacks, containers... I'm lost
+- naming scheme: stackname_containername_# (??? double check this)
+- sidekick containers move together (??? right?)
+    - all separately-running Docker containers with their own IPs
+- links allow you to reference a different stack's containers without being in the same stack
+- can view logs, execute shell, and a few other things through the Rancher UI
+
+#### More Rancher fun
+- Rancher has a catalog of containers which can be installed with minimal configuration
+    - Can create a private catalog of containers we create
+- (lots of things I didn't feel like noting, mainly because lunch)
+
+## Building Briks
+(that's our new name)
+12:45pm
+
+- Ravi and Chris getting started
+    - Postgres
+    - question about deploy process - local? remote? Docker?
+- Ashby is going to take a good amount of GQ admin code to lay on top of the API
