@@ -60,8 +60,10 @@ led by OPI David
 7. returns callback to GH when the build is done done, and GH can tell if the build passed or not
 8. GH can then allow/disallow PRs or other commits if a build doesn't pass
 9. GH's permissions can then take over and require code reviews if desired
+10. can add Slack notifications to Drone that work via webhooks
+    - notifications can be configured to only run on certain branches (master, etc) events (push, pull-request, etc.) and build results (pass, fail)
 
-#### Drone v. Jenkins
+#### Drone vs. Jenkins
 - Drone uses the GitHub webhooks to listen for events
 - Drone is build on Docker and makes tons of use of containers
 - configs are stored in source control and are portable and isolated (which version of Java, Node, etc)
