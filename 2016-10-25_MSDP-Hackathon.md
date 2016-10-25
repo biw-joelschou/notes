@@ -62,8 +62,20 @@ led by OPI David
 9. GH's permissions can then take over and require code reviews if desired
 10. can add Slack notifications to Drone that work via webhooks
     - notifications can be configured to only run on certain branches (master, etc) events (push, pull-request, etc.) and build results (pass, fail)
+11. adding a publish command that pushes the successful build out to AWS ECR
+12. adding a deploy command for development builds
+    - pushes to the same briks stack/service in Rancher
+    - can do auto upgrades when pushed
+    
+- Drone has a concept called "service containers" that are useful for creating additional Docker images that support the build
+    - e.g. a Postgres DB that's independent of any other dev DBs
+    - e.g. a Chrome driver image for doing in-browser testing without actually using a user's browser
+    
+- Drone doesn't cache depedencies between builds, so it has to pull everything every time
+    - this can be configured, but it does come with some gotchas
+    - John recommends only caching on master
 
-#### Drone vs. Jenkins
+### Drone vs. Jenkins
 - Drone uses the GitHub webhooks to listen for events
 - Drone is build on Docker and makes tons of use of containers
 - configs are stored in source control and are portable and isolated (which version of Java, Node, etc)
@@ -71,3 +83,34 @@ led by OPI David
     - configs are YAML files
 - Drone doesn't store every build the way Jenkins does, so it requires further configuration to track stats and keep track of what has happened with each build
 - Point is simply to run builds as quickly as possible to verify code success
+
+### Build Dockerfile
+10:40am
+led by OPI David
+
+- can create an image by starting with an empty Docker image and building within
+- recommends creating a Dockerfile to programmatically build the image so it's repeatable
+    1. starts FROM the same openJDK image used for the build
+        - aside: Docker containers are layered so if multiple applications use the same base image, they don't have to download the entire thing every time; just the changes
+        - every step in the Dockerfile is a layer
+    2. ADDs the distributed output of the build (.tar in this case)
+    3. runs a CMD to extract the .tar
+    4. EXPOSE a port on which the application runs
+        - don't need to explicitly do this in the Dockerfile, but it's helpful for people to see where the app will run
+    5. after the build is done, run the finished Docker container to start up the server
+    6. then map the port on the container to the host computer's port so test/view in the host browser
+    
+### On Rancher
+11:25am or so
+
+1. created a stack on Rancher called briks
+2. created an empty service called briks
+3. the Drone build will automatically push successful builds to the service in Rancher when a pull request is merged
+4. added a rule on the load balancer to route requests to `bricks.*` on port 80 to the briks container on port 9000
+
+(really good side conversation about logging and where it goes. OPI has recommendations for getting logs into a service that can search and filter and do all sorts of manipulation on logs that can't be done in normal circumstances)
+    - uses stdout and stderror as the way to capture errors instead of writing to files
+    
+#### Additions to the Drone build
+(#s 11 and 12 above)
+    
